@@ -1,7 +1,5 @@
 # JupyterHub GPU Lab
 
-## English
-
 This project provides a Dockerized environment for running JupyterHub with GPU support, native user authentication, and persistent volumes for data and notebooks. It's designed for multi-user environments such as research labs, educational institutions, or development teams needing access to shared GPU resources.
 
 ### Features
@@ -80,8 +78,6 @@ Based on `nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu22.04`, includes:
 Fernando Cárdenas  
 Repository: https://github.com/fercardenas29/jupyterhub-gpu-lab
 
-
-## Español
 
 Este proyecto contiene un entorno Dockerizado para ejecutar JupyterHub con soporte de GPU, autenticación basada en usuarios del sistema y volúmenes persistentes para datos y notebooks. Está orientado a entornos multiusuario como laboratorios de investigación, instituciones educativas o equipos de desarrollo que requieran acceso a recursos de cómputo con GPU.
 

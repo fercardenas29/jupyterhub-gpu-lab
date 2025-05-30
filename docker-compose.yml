@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  jupyterhub:
+    build: .
+    container_name: jupyterhub-gpu  # Nombre del contenedor
+    ports:
+      - "8012:8000"  # Puerto externo 8012 → interno 8000
+    volumes:
+      - jupyterhub_data:/srv/jupyterhub  # Configuración y runtime del hub
+      - ./home:/home  # Directorio para notebooks de usuarios
+      - datausers_jupyterhub:/var/lib/datausers_jupyterhub  # Carpeta de datos personales (~/data)
+    restart: always
+    environment:
+      - TZ=America/Guayaquil
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]  # Habilita uso de GPU si está disponible
+
+volumes:
+  jupyterhub_data:
+  datausers_jupyterhub:
+    driver: local
+    driver_opts:
+      type: none
+      device: /var/lib/datausers_jupyterhub
+      o: bind

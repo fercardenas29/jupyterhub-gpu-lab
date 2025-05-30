@@ -1,5 +1,88 @@
 # JupyterHub GPU Lab
 
+## English
+
+This project provides a Dockerized environment for running JupyterHub with GPU support, native user authentication, and persistent volumes for data and notebooks. It's designed for multi-user environments such as research labs, educational institutions, or development teams needing access to shared GPU resources.
+
+### Features
+
+- Native authentication (Linux system users).
+- Dynamic user and volume creation on login.
+- Persistent workspace and data per user.
+- Full support for GPU execution using `nvidia-docker`.
+- Docker Compose orchestration.
+- JupyterLab interface.
+
+### Repository structure
+
+jupyterhub-gpu-lab/
+├── docker-compose.yml        # Service definition, volumes, ports  
+├── Dockerfile                # Custom image with Jupyter and GPU support  
+├── jupyterhub_config.py      # JupyterHub server configuration  
+└── home/                     # Mapped folder for user home directories
+
+### Requirements
+
+- Docker  
+- Docker Compose v2  
+- NVIDIA Container Toolkit (if GPU will be used)
+
+### Usage
+
+1. Clone the repository:
+
+   git clone https://github.com/fercardenas29/jupyterhub-gpu-lab.git  
+   cd jupyterhub-gpu-lab
+
+2. Build and start services:
+
+   docker compose up -d --build
+
+3. Open in browser:
+
+   http://localhost:8012
+
+### Technical configuration
+
+**Dockerfile**  
+Based on `nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu22.04`, includes:
+
+- JupyterHub, JupyterLab, Notebook  
+- nativeauthenticator  
+- configurable-http-proxy  
+- System tools: `git`, `curl`, `nodejs`, `npm`, etc.
+
+**Volumes**
+
+- `./home:/home`: Notebooks and files per user  
+- `jupyterhub_data:/srv/jupyterhub`: Hub configuration and state  
+- `datausers_jupyterhub:/var/lib/datausers_jupyterhub`: User-specific data (`~/data`)
+
+**jupyterhub_config.py**
+
+- Uses `nativeauthenticator`  
+- Auto-approval of new users  
+- Pre-spawn hook that:
+  - Creates UNIX users if they don't exist
+  - Initializes `~/notebooks` and `~/data`
+  - Sets correct ownership and creates symlinks
+
+### Reset and cleanup
+
+   docker compose down --volumes  
+   rm -rf ./home/*  
+   sudo rm -rf /var/lib/datausers_jupyterhub/*
+
+---
+
+## Author
+
+Fernando Cárdenas  
+Repository: https://github.com/fercardenas29/jupyterhub-gpu-lab
+
+
+## Español
+
 Este proyecto contiene un entorno Dockerizado para ejecutar JupyterHub con soporte de GPU, autenticación basada en usuarios del sistema y volúmenes persistentes para datos y notebooks. Está orientado a entornos multiusuario como laboratorios de investigación, instituciones educativas o equipos de desarrollo que requieran acceso a recursos de cómputo con GPU.
 
 ## Características

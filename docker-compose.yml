@@ -3,25 +3,22 @@ version: "3.9"
 services:
   jupyterhub:
     build: .
-    container_name: jupyterhub-gpu  # Nombre del contenedor
+    container_name: jupyterhub-gpu
     ports:
-      - "8012:8000"  # Puerto externo 8012 → interno 8000
+      - "8012:8000"
     volumes:
-      - jupyterhub_data:/srv/jupyterhub  # Configuración y runtime del hub
-      - ./home:/home  # Directorio para notebooks de usuarios
-      - datausers_jupyterhub:/var/lib/datausers_jupyterhub  # Carpeta de datos personales (~/data)
+      - jupyterhub_data:/srv/jupyterhub         # 💾 Datos internos del hub
+      - ./home:/home                            # 🔗 Usuarios con notebooks montados desde host
+      - datausers_jupyterhub:/var/lib/datausers_jupyterhub  # 🆕 Externaliza ~/data
     restart: always
     environment:
       - TZ=America/Guayaquil
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - capabilities: [gpu]  # Habilita uso de GPU si está disponible
+    runtime: nvidia  # Asegura que el contenedor use NVIDIA Runtime
 
+# Volúmenes
 volumes:
   jupyterhub_data:
-  datausers_jupyterhub:
+  datausers_jupyterhub:                         # 🆕 Volumen externo montado manualmente
     driver: local
     driver_opts:
       type: none
